@@ -1,6 +1,7 @@
 var notes=[];
 renderAllElements()
 init()
+updateButtonDisable();
 
 
 function init(){
@@ -44,31 +45,26 @@ function renderListItem(title){
 }
 
 function renderUlElement(){
-  const ulElement = `<ul class="list list-group" id="list"></ul>`;
-  return ulElement;
+  return `<ul class="list list-group" id="list"></ul>`;
 }
 
 function clickUlElement(){
   const myUlList = document.getElementById('list');
     myUlList.addEventListener("click", function(event){
-      console.log(event.target.parentNode.parentNode);
-        selectedItem(event.target.parentNode,event.target);
+      clickListItem(myUlList.childNodes, event.target.parentNode);
       });
 }
 
 function renderInputElements(){
-  const inputElement = `<input class="form-control my-1" id="title" name="title"></input>
+  return `<input class="form-control my-1" id="title" name="title"></input>
                         <textarea class="form-control my-2" id="content" name="name" rows="5"></textarea>`;
-  return inputElement;
 }
 
 function renderButtonElements(){
-  const buttonElement = `<button class="btn btn-success " type="button" name="button" onClick="takeInputVal()">add</button>
+  return  `<button class="btn btn-success " type="button" name="button" onClick="takeInputVal()">add</button>
                          <button id="update-button" class="btn btn-warning mx-2" type="button" name="button" onClick="updateListItem()">
                             update
                          </button>`;
-
-  return buttonElement;
 }
 
 function renderAllElements(){
@@ -103,20 +99,18 @@ function takeInputVal(){
 }
 
 // secilen itemin indexsini al
-function getIndex(listItems, selectedItem){
-  // var i = listItems.indexOf(selectedItem);  SOR!
-  // console.log(i);
-  var childs = listItems;
+function getIndex(listItems, clicktedItem){
+   var childs = listItems;
     for (var i = 0; i < childs.length; i++) {
-      if(selectedItem === childs[i]) break;
+      if(clicktedItem === childs[i]) break;
     }
   return i;
 }
 
 // list
-function clickListItem(clicktedItem ,e){
-  selectedItem = e.target.parentNode;
-  index = getIndex(clicktedItem.childNodes, selectedItem);
+function clickListItem(listItems ,clicktedItem){
+  selectedItem=clicktedItem;
+  index = getIndex(listItems, clicktedItem);
   setForm(notes[index].title, notes[index].content);
 }
 
@@ -145,7 +139,7 @@ function deleteNote(delItem ,event){
   notes = notes.filter(item => item.id !== Number(buttonIndex))
 
   saveLocal();
-  // updateButtonDisable();
+  updateButtonDisable();
 }
 
 // localStorage a kaydetme
@@ -154,14 +148,14 @@ function saveLocal(){
 }
 
 
-// function updateButtonDisable(){
-//   var but=document.getElementById("update-button")
-//   if (notes.length !== 0){
-//     but.disabled = false;
-//   }else {
-//     but.disabled = true;
-//   }
-// }
+function updateButtonDisable(){
+  var but=document.getElementById("update-button")
+  if (notes.length !== 0){
+    but.disabled = false;
+  }else {
+    but.disabled = true;
+  }
+}
 
 var id = 0;
 function Note ({title, content}){
