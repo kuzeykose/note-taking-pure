@@ -1,8 +1,8 @@
 var notes=[];
+
 renderAllElements()
 init()
 updateButtonDisable();
-
 
 function init(){
   notes = JSON.parse(localStorage.getItem('notes'));
@@ -32,16 +32,24 @@ function getForm(){
   }
 }
 
+
 // liste itemlarini ekrana yazdirmak
 function renderListItem(title){
   const list = document.querySelector('.list');
     list.innerHTML += `<li class='col-10 list-group-item my-1 mr-1 text-truncate'">
                           <span> ${title}</span>
                           <div class="transparan"></div>
-                          <button class='del-btn btn btn-danger btn-sm my-2'
-                            onClick="deleteNote(this, event)"> x
+                          <button class='del-btn btn btn-danger btn-sm my-2'> x
                           </button>
                         </li>`;
+}
+
+function clickDelButton(){
+  let delBut = document.getElementsByClassName('del-btn');
+
+    delBut[index].addEventListener("click", function(event){
+      deleteNote(event)
+    });
 }
 
 function renderUlElement(){
@@ -52,7 +60,10 @@ function clickUlElement(){
   const myUlList = document.getElementById('list');
     myUlList.addEventListener("click", function(event){
       clickListItem(myUlList.childNodes, event.target.parentNode);
-      });
+      if(event.target.tagName === 'BUTTON'){
+        clickDelButton();
+      };
+  }, true);
 }
 
 function renderInputElements(){
@@ -84,7 +95,6 @@ function renderAllElements(){
                     </div>`;
   clickUlElement();
 }
-
 
 // yeni liste item olusturmak ve array in icine yollanmasi
 function takeInputVal(){
@@ -124,19 +134,15 @@ function updateListItem(){
 }
 
 // silme
-function deleteNote(delItem ,event){
-  event.stopPropagation();
-
-  var c = delItem.parentNode.parentNode.childNodes;
-  var d = delItem.parentNode;
-  let buttonIndex = getIndex(c, d)
+function deleteNote(event){
+  let list = document.getElementById("list").childNodes;
 
   for (var i = 0; i < notes.length; i++) {
     notes[i].id=i;
   }
 
-  c[buttonIndex].remove();
-  notes = notes.filter(item => item.id !== Number(buttonIndex))
+  list[index].remove();
+  notes = notes.filter(item => item.id !== Number(index))
 
   saveLocal();
   updateButtonDisable();
