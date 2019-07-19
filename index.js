@@ -1,6 +1,7 @@
 var notes=[];
+renderAllElements()
 init()
-updateButtonDisable()
+
 
 function init(){
   notes = JSON.parse(localStorage.getItem('notes'));
@@ -34,9 +35,60 @@ function getForm(){
 function renderListItem(title){
   const list = document.querySelector('.list');
     list.innerHTML += `<li class='col-10 list-group-item my-1 mr-1 text-truncate'">
-               <span> ${title}</span>
-<button class='btn btn-danger btn-sm my-2' onClick="deleteNote(this, event)">x</button></li>`;
+                          <span> ${title}</span>
+                          <div class="transparan"></div>
+                          <button class='del-btn btn btn-danger btn-sm my-2'
+                            onClick="deleteNote(this, event)"> x
+                          </button>
+                        </li>`;
 }
+
+function renderUlElement(){
+  const ulElement = `<ul class="list list-group" id="list"></ul>`;
+  return ulElement;
+}
+
+function clickUlElement(){
+  const myUlList = document.getElementById('list');
+    myUlList.addEventListener("click", function(event){
+      console.log(event.target.parentNode.parentNode);
+        selectedItem(event.target.parentNode,event.target);
+      });
+}
+
+function renderInputElements(){
+  const inputElement = `<input class="form-control my-1" id="title" name="title"></input>
+                        <textarea class="form-control my-2" id="content" name="name" rows="5"></textarea>`;
+  return inputElement;
+}
+
+function renderButtonElements(){
+  const buttonElement = `<button class="btn btn-success " type="button" name="button" onClick="takeInputVal()">add</button>
+                         <button id="update-button" class="btn btn-warning mx-2" type="button" name="button" onClick="updateListItem()">
+                            update
+                         </button>`;
+
+  return buttonElement;
+}
+
+function renderAllElements(){
+  const app = document.getElementById('app');
+    app.innerHTML = `<div class="container">
+                      <div class="row my-5">
+                          <div class="col-4">
+                            ${renderUlElement()}
+                          </div>
+                          <div class="col-8">
+                            ${renderInputElements()}
+                            <div class="row d-flex justify-content-end">
+                              ${renderButtonElements()}
+                            </div>
+                          </div>
+                      </div>
+                    </div>`;
+  clickUlElement();
+}
+
 
 // yeni liste item olusturmak ve array in icine yollanmasi
 function takeInputVal(){
@@ -61,23 +113,20 @@ function getIndex(listItems, selectedItem){
   return i;
 }
 
-
 // list
 function clickListItem(clicktedItem ,e){
-  selectedItem = e.target;
-  console.log(selectedItem);
+  selectedItem = e.target.parentNode;
   index = getIndex(clicktedItem.childNodes, selectedItem);
   setForm(notes[index].title, notes[index].content);
 }
 
 function updateListItem(){
-    var newVal = getForm();
-    notes[index].title = newVal.title;
-    notes[index].content = newVal.content;
+  var newVal = getForm();
+  notes[index].title = newVal.title;
+  notes[index].content = newVal.content;
 
-    selectedItem.childNodes[1].innerHTML=newVal.title;
-
-    saveLocal();
+  selectedItem.childNodes[1].innerHTML=newVal.title;
+  saveLocal();
 }
 
 // silme
@@ -96,7 +145,7 @@ function deleteNote(delItem ,event){
   notes = notes.filter(item => item.id !== Number(buttonIndex))
 
   saveLocal();
-  updateButtonDisable();
+  // updateButtonDisable();
 }
 
 // localStorage a kaydetme
@@ -105,14 +154,14 @@ function saveLocal(){
 }
 
 
-function updateButtonDisable(){
-  var but=document.getElementById("update-button")
-  if (notes.length !== 0){
-    but.disabled = false;
-  }else {
-    but.disabled = true;
-  }
-}
+// function updateButtonDisable(){
+//   var but=document.getElementById("update-button")
+//   if (notes.length !== 0){
+//     but.disabled = false;
+//   }else {
+//     but.disabled = true;
+//   }
+// }
 
 var id = 0;
 function Note ({title, content}){
