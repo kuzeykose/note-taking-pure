@@ -1,10 +1,9 @@
 var notes=[];
 
-renderAllElements()
 init()
-updateButtonDisable();
 
 function init(){
+  renderAllElements()
   notes = JSON.parse(localStorage.getItem('notes'));
   if(notes === null){
     notes = []
@@ -13,6 +12,7 @@ function init(){
     notes[i].id=i;
     renderListItem(notes[i].title);
   }
+  updateButtonDisable();
 }
 
 function resetForm(){
@@ -46,9 +46,8 @@ function renderListItem(title){
 
 function clickDelButton(){
   let delBut = document.getElementsByClassName('del-btn');
-
-    delBut[index].addEventListener("click", function(event){
-      deleteNote(event)
+    delBut[index].addEventListener("click", function(){
+      deleteNote()
     });
 }
 
@@ -129,12 +128,12 @@ function updateListItem(){
   notes[index].title = newVal.title;
   notes[index].content = newVal.content;
 
-  selectedItem.childNodes[1].innerHTML=newVal.title;
+  selectedItem.childNodes[1].innerHTML = newVal.title;
   saveLocal();
 }
 
 // silme
-function deleteNote(event){
+function deleteNote(){
   let list = document.getElementById("list").childNodes;
 
   for (var i = 0; i < notes.length; i++) {
@@ -164,6 +163,7 @@ function updateButtonDisable(){
 }
 
 var id = 0;
+
 function Note ({title, content}){
   this.id = id ++;
   this.title = title
